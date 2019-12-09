@@ -5,15 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Include Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
 <div class="container" id="app">
-    <p>{{message}}</p>
+    <label>Algorithm Type:</label>
+    <select v-model="algorithmType">
+        <option disabled value="">Please select one</option>
+        <option value="NAIVE">Naive Bayes</option>
+        <option value="DECISION">Decision Tree</option>
+        <option value="LINEAR">Linear Regression</option>
+    </select>
+    <label>Number of Folds:</label>
+    <input type="number" v-model="numberOfFolds">
+    <label>Upload Dataset:</label>
     <input type="file" id="file" @change="getFile" multiple>
-    <button @click="sendForm"></button>
+    <button @click="sendForm">Sonuçları Göster</button>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -33,7 +41,8 @@
     var app = new Vue({
         el: '#app',
         data: {
-            message: 'Hello',
+            algorithmType: '',
+            numberOfFolds: '',
             files: []
         },
         methods: {
@@ -43,7 +52,8 @@
             sendForm(){
                 var formData = new FormData();
                 formData.append("dataset", this.files[0]);
-                formData.append("message", this.message);
+                formData.append("algorithmType", this.algorithmType);
+                formData.append("numberOfFolds", this.numberOfFolds);
                 axios.post('/getResult', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -54,11 +64,6 @@
                 }).catch(() => {
                 });
             }
-        },
-        mounted() {
-            axios.get('/hello').then(response => {
-                this.message = response.data;
-            })
         }
     });
 </script>
