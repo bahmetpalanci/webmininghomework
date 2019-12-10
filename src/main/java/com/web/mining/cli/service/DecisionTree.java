@@ -1,5 +1,6 @@
 package com.web.mining.cli.service;
 
+import com.web.mining.cli.model.EvaluationVM;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import weka.classifiers.Classifier;
@@ -15,7 +16,7 @@ import weka.core.Instances;
 @Component
 public class DecisionTree extends AbstractMiningAlgorithm {
     @Override
-    public Evaluation process(MultipartFile multipartFile, int numberOfFolds) throws Exception {
+    public EvaluationVM process(MultipartFile multipartFile, int numberOfFolds, int neighbors) throws Exception {
         Instances dataSet = getDataSet(multipartFile);
         Instances[] split = crossValidationSplit(dataSet, numberOfFolds);
         Instances trainingDataSet = split[0];
@@ -25,14 +26,6 @@ public class DecisionTree extends AbstractMiningAlgorithm {
 
         Evaluation eval = new Evaluation(trainingDataSet);
         eval.evaluateModel(classifier, testingDataSet);
-
-        System.out.println("** Decision Tress Evaluation with Datasets **");
-        System.out.println(eval.toSummaryString());
-        System.out.print(" the expression for the input data as per alogorithm is ");
-        System.out.println(classifier);
-        System.out.println(eval.toMatrixString());
-        System.out.println(eval.toClassDetailsString());
-
-        return eval;
+        return new EvaluationVM(eval,classifier);
     }
 }

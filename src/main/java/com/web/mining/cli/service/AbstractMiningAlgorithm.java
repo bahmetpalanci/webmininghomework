@@ -1,5 +1,6 @@
 package com.web.mining.cli.service;
 
+import com.web.mining.cli.model.EvaluationVM;
 import org.springframework.web.multipart.MultipartFile;
 import weka.classifiers.Evaluation;
 import weka.core.Instances;
@@ -38,6 +39,6 @@ public abstract class AbstractMiningAlgorithm {
         return split;
     }
 
-    public abstract Evaluation process(MultipartFile multipartFile, int numberOfFolds) throws Exception;
+    public abstract EvaluationVM process(MultipartFile multipartFile, int numberOfFolds, int neighbors) throws Exception;
 
 }
